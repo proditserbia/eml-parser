@@ -123,13 +123,13 @@ _VOLUME_PATTERN = re.compile(
 
 _SECTION_HEADERS = {
     "volume_usage": re.compile(
-        r"^[\s\-*•]*volume\s+usage[\s\-:]*$", re.IGNORECASE
+        r"^[\s\-*•#]*volume\s+usage[\s\-:]*$", re.IGNORECASE
     ),
     "active": re.compile(
-        r"^[\s\-*•]*active\s+workspaces?[\s\-:]*$", re.IGNORECASE
+        r"^[\s\-*•#]*active\s+workspaces?[\s\-:]*$", re.IGNORECASE
     ),
     "old": re.compile(
-        r"^[\s\-*•]*workspaces?\s+with\s+last\s+login\s+older\s+than\s+90\s+days?[\s\-:]*$",
+        r"^[\s\-*•#]*workspaces?\s+with\s+last\s+login\s+older\s+than\s+90\s+days?[\s\-:]*$",
         re.IGNORECASE,
     ),
 }
@@ -321,15 +321,15 @@ Date: Mon, 01 Apr 2024 10:00:00 +0200
 Subject: ELEMENTS Info: Status projekata
 Content-Type: text/plain; charset=utf-8
 
-Volume Usage
+## Volume Usage
 BeeGFS: 92.6 TB free (73% used, changed by -4%)
 
-Active Workspaces
+## Active Workspaces
 - ProjectAlpha
 - ProjectBeta
 - ProjectGamma
 
-Workspaces with last login older than 90 days
+## Workspaces with last login older than 90 days
 - OldProject1
 - OldProject2
 """
