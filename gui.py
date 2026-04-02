@@ -70,14 +70,14 @@ class MainWindow:
         self._build_log_panel()
         self._apply_treeview_style()
 
-        self._log("Добро дошли. Учитајте EML датотеку да бисте почели.")
+        self._log("Dobro došli. Učitajte EML datoteku da biste počeli.")
 
     # ------------------------------------------------------------------
     # Root window setup
     # ------------------------------------------------------------------
 
     def _build_root(self) -> None:
-        self._root.title("ELEMENTS EML Парсер")
+        self._root.title("ELEMENTS EML Parser")
         self._root.configure(bg=_BG)
         self._root.geometry("1100x780")
         self._root.minsize(800, 560)
@@ -106,19 +106,19 @@ class MainWindow:
             borderwidth=0,
         )
 
-        _HoverButton(toolbar, text="📂  Учитај EML",
+        _HoverButton(toolbar, text="📂  Učitaj EML",
                      command=self._load_eml, **btn_cfg).pack(side="left", padx=4)
-        _HoverButton(toolbar, text="🗑  Очисти",
+        _HoverButton(toolbar, text="🗑  Očisti",
                      command=self._clear, **btn_cfg).pack(side="left", padx=4)
 
         sep = tk.Frame(toolbar, width=2, bg=_FG_DIM)
         sep.pack(side="left", padx=8, fill="y", pady=2)
 
-        _HoverButton(toolbar, text="📊  Извези у Excel",
+        _HoverButton(toolbar, text="📊  Izvezi u Excel",
                      command=self._export_excel, **btn_cfg).pack(side="left", padx=4)
-        _HoverButton(toolbar, text="📄  Извези у PDF",
+        _HoverButton(toolbar, text="📄  Izvezi u PDF",
                      command=self._export_pdf, **btn_cfg).pack(side="left", padx=4)
-        _HoverButton(toolbar, text="💾  Сачувај JSON",
+        _HoverButton(toolbar, text="💾  Sačuvaj JSON",
                      command=self._export_json, **btn_cfg).pack(side="left", padx=4)
 
     # ------------------------------------------------------------------
@@ -153,7 +153,7 @@ class MainWindow:
     def _build_metadata_frame(self, parent: tk.Widget) -> None:
         frame = tk.LabelFrame(
             parent,
-            text=" Метаподаци ",
+            text=" Metapodaci ",
             bg=_BG2,
             fg=_ACCENT,
             font=(_FONT_FAMILY, 10, "bold"),
@@ -164,10 +164,7 @@ class MainWindow:
         frame.columnconfigure(1, weight=1)
 
         fields = [
-            ("Пошиљалац:", "_lbl_from"),
-            ("Прималац:", "_lbl_to"),
-            ("Датум:", "_lbl_date"),
-            ("Наслов:", "_lbl_subject"),
+            ("Naslov:", "_lbl_subject"),
         ]
         for row_idx, (label, attr) in enumerate(fields):
             tk.Label(frame, text=label, bg=_BG2, fg=_FG_DIM,
@@ -187,7 +184,7 @@ class MainWindow:
     def _build_storage_frame(self, parent: tk.Widget) -> None:
         frame = tk.LabelFrame(
             parent,
-            text=" Коришћење складишта ",
+            text=" Korišćenje skladišta ",
             bg=_BG2,
             fg=_ACCENT,
             font=(_FONT_FAMILY, 10, "bold"),
@@ -198,10 +195,9 @@ class MainWindow:
         frame.columnconfigure(1, weight=1)
 
         fields = [
-            ("Волумен:", "_lbl_volume"),
-            ("Слободан простор:", "_lbl_free"),
-            ("Искоришћено %:", "_lbl_used"),
-            ("Промена %:", "_lbl_change"),
+            ("Slobodan prostor:", "_lbl_free"),
+            ("Iskorišćeno %:", "_lbl_used"),
+            ("Promena %:", "_lbl_change"),
         ]
         for row_idx, (label, attr) in enumerate(fields):
             tk.Label(frame, text=label, bg=_BG2, fg=_FG_DIM,
@@ -222,7 +218,7 @@ class MainWindow:
         bar.grid(row=0, column=0, sticky="ew", pady=(0, 4))
         bar.columnconfigure(1, weight=1)
 
-        tk.Label(bar, text="🔍  Претрага:", bg=_BG, fg=_FG_DIM,
+        tk.Label(bar, text="🔍  Pretraga:", bg=_BG, fg=_FG_DIM,
                  font=(_FONT_FAMILY, 9)).grid(row=0, column=0, padx=(0, 6), sticky="w")
 
         self._search_var = tk.StringVar()
@@ -251,8 +247,8 @@ class MainWindow:
         self._tab_active = tk.Frame(notebook, bg=_BG3)
         self._tab_old = tk.Frame(notebook, bg=_BG3)
 
-        notebook.add(self._tab_active, text="  Активни  ")
-        notebook.add(self._tab_old, text="  Старији од 90 дана  ")
+        notebook.add(self._tab_active, text="  Aktivni  ")
+        notebook.add(self._tab_old, text="  Stariji od 90 dana  ")
 
         self._tree_active = self._make_tree(self._tab_active)
         self._tree_old = self._make_tree(self._tab_old)
@@ -263,13 +259,13 @@ class MainWindow:
         frame.columnconfigure(0, weight=1)
         frame.rowconfigure(0, weight=1)
 
-        columns = ("#", "Назив")
+        columns = ("#", "Naziv")
         tree = ttk.Treeview(frame, columns=columns, show="headings",
                             selectmode="extended", style="Dark.Treeview")
         tree.heading("#", text="#")
-        tree.heading("Назив", text="Назив радног простора")
+        tree.heading("Naziv", text="Naziv radnog prostora")
         tree.column("#", width=50, minwidth=40, anchor="center", stretch=False)
-        tree.column("Назив", width=500, minwidth=200, anchor="w")
+        tree.column("Naziv", width=500, minwidth=200, anchor="w")
 
         vsb = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
         hsb = ttk.Scrollbar(frame, orient="horizontal", command=tree.xview)
@@ -360,28 +356,28 @@ class MainWindow:
 
     def _load_eml(self) -> None:
         path = filedialog.askopenfilename(
-            title="Одаберите EML датотеку",
-            filetypes=[("EML датотеке", "*.eml"), ("Све датотеке", "*.*")],
+            title="Odaberite EML datoteku",
+            filetypes=[("EML datoteke", "*.eml"), ("Sve datoteke", "*.*")],
         )
         if not path:
             return
 
-        self._log(f"Учитавање: {path}")
+        self._log(f"Učitavanje: {path}")
         try:
             report = self._parser.parse_file(path)
         except FileNotFoundError as exc:
             self._error(str(exc))
             return
         except ValueError as exc:
-            self._error(f"Грешка при парсирању: {exc}")
+            self._error(f"Greška pri parsiranju: {exc}")
             return
         except Exception as exc:
-            self._error(f"Неочекивана грешка: {exc}")
+            self._error(f"Neočekivana greška: {exc}")
             return
 
         source = self._parser.last_source
         if source == "html":
-            self._log("⚠ Равни текст није пронађен; коришћено HTML уклањање форматирања.")
+            self._log("⚠ Ravni tekst nije pronađen; korišćeno HTML uklanjanje formatiranja.")
 
         self._report = report
         self._all_active = list(report.active_workspaces)
@@ -389,66 +385,65 @@ class MainWindow:
 
         self._populate(report)
         self._log(
-            f"✓ Учитано: {len(report.active_workspaces)} активних, "
-            f"{len(report.old_workspaces)} старих радних простора."
+            f"✓ Učitano: {len(report.active_workspaces)} aktivnih, "
+            f"{len(report.old_workspaces)} starih radnih prostora."
         )
 
     def _clear(self) -> None:
         self._report = None
         self._all_active = []
         self._all_old = []
-        for attr in ("_lbl_from", "_lbl_to", "_lbl_date", "_lbl_subject",
-                     "_lbl_volume", "_lbl_free", "_lbl_used", "_lbl_change"):
+        for attr in ("_lbl_subject", "_lbl_free", "_lbl_used", "_lbl_change"):
             getattr(self, attr).set("—")
         self._tree_active.delete(*self._tree_active.get_children())
         self._tree_old.delete(*self._tree_old.get_children())
         self._search_var.set("")
-        self._log("Подаци очишћени.")
+        self._log("Podaci očišćeni.")
 
     def _export_excel(self) -> None:
         if not self._report:
-            self._warn("Нема учитаних података. Прво учитајте EML датотеку.")
+            self._warn("Nema učitanih podataka. Prvo učitajte EML datoteku.")
             return
         path = filedialog.asksaveasfilename(
-            title="Сачувај Excel извештај",
+            title="Sačuvaj Excel izveštaj",
             defaultextension=".xlsx",
-            filetypes=[("Excel датотеке", "*.xlsx")],
+            filetypes=[("Excel datoteke", "*.xlsx")],
             initialfile=f"eml_report_{_timestamp()}.xlsx",
         )
         if not path:
             return
         try:
             self._excel.export(self._report, path)
-            self._log(f"✓ Excel извештај сачуван: {path}")
+            self._log(f"✓ Excel izveštaj sačuvan: {path}")
         except Exception as exc:
-            self._error(f"Грешка при извозу у Excel: {exc}")
+            self._error(f"Greška pri izvozu u Excel: {exc}")
 
     def _export_pdf(self) -> None:
         if not self._report:
-            self._warn("Нема учитаних података. Прво учитајте EML датотеку.")
+            self._warn("Nema učitanih podataka. Prvo učitajte EML datoteku.")
             return
         path = filedialog.asksaveasfilename(
-            title="Сачувај PDF извештај",
+            title="Sačuvaj PDF izveštaj",
             defaultextension=".pdf",
-            filetypes=[("PDF датотеке", "*.pdf")],
+            filetypes=[("PDF datoteke", "*.pdf")],
             initialfile=f"eml_report_{_timestamp()}.pdf",
         )
         if not path:
             return
         try:
             self._pdf.export(self._report, path)
-            self._log(f"✓ PDF извештај сачуван: {path}")
+            self._log(f"✓ PDF izveštaj sačuvan: {path}")
         except Exception as exc:
-            self._error(f"Грешка при извозу у PDF: {exc}")
+            self._error(f"Greška pri izvozu u PDF: {exc}")
 
     def _export_json(self) -> None:
         if not self._report:
-            self._warn("Нема учитаних података. Прво учитајте EML датотеку.")
+            self._warn("Nema učitanih podataka. Prvo učitajte EML datoteku.")
             return
         path = filedialog.asksaveasfilename(
-            title="Сачувај JSON датотеку",
+            title="Sačuvaj JSON datoteku",
             defaultextension=".json",
-            filetypes=[("JSON датотеке", "*.json")],
+            filetypes=[("JSON datoteke", "*.json")],
             initialfile=f"eml_report_{_timestamp()}.json",
         )
         if not path:
@@ -457,21 +452,17 @@ class MainWindow:
             data = dataclasses.asdict(self._report)
             with open(path, "w", encoding="utf-8") as fh:
                 json.dump(data, fh, ensure_ascii=False, indent=2)
-            self._log(f"✓ JSON датотека сачувана: {path}")
+            self._log(f"✓ JSON datoteka sačuvana: {path}")
         except Exception as exc:
-            self._error(f"Грешка при чувању JSON: {exc}")
+            self._error(f"Greška pri čuvanju JSON: {exc}")
 
     # ------------------------------------------------------------------
     # Populate UI from report
     # ------------------------------------------------------------------
 
     def _populate(self, report: ParsedReport) -> None:
-        self._lbl_from.set(report.from_addr or "—")
-        self._lbl_to.set(report.to_addr or "—")
-        self._lbl_date.set(report.date or "—")
         self._lbl_subject.set(report.subject or "—")
 
-        self._lbl_volume.set(report.volume_name or "—")
         self._lbl_free.set(report.free_space or "—")
         self._lbl_used.set(report.used_percent or "—")
         self._lbl_change.set(report.change_percent or "—")
@@ -508,12 +499,12 @@ class MainWindow:
 
     def _warn(self, msg: str) -> None:
         self._append_log(f"[{_now()}] ⚠  {msg}")
-        messagebox.showwarning("Упозорење", msg, parent=self._root)
+        messagebox.showwarning("Upozorenje", msg, parent=self._root)
 
     def _error(self, msg: str) -> None:
         self._append_log(f"[{_now()}] ✗  {msg}")
         logger.error(msg)
-        messagebox.showerror("Грешка", msg, parent=self._root)
+        messagebox.showerror("Greška", msg, parent=self._root)
 
     def _append_log(self, text: str) -> None:
         self._log_text.configure(state="normal")

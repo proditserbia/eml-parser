@@ -218,13 +218,13 @@ class EmlParser:
         """
         path = Path(path)
         if not path.exists():
-            raise FileNotFoundError(f"EML датотека није пронађена: {path}")
+            raise FileNotFoundError(f"EML datoteka nije pronađena: {path}")
 
         raw = path.read_bytes()
         try:
             msg = email.message_from_bytes(raw)
         except Exception as exc:
-            raise ValueError(f"Грешка при читању EML датотеке: {exc}") from exc
+            raise ValueError(f"Greška pri čitanju EML datoteke: {exc}") from exc
 
         return self._parse_message(msg)
 
@@ -233,7 +233,7 @@ class EmlParser:
         try:
             msg = email.message_from_bytes(raw)
         except Exception as exc:
-            raise ValueError(f"Грешка при читању EML датотеке: {exc}") from exc
+            raise ValueError(f"Greška pri čitanju EML datoteke: {exc}") from exc
         return self._parse_message(msg)
 
     # ------------------------------------------------------------------
@@ -246,7 +246,7 @@ class EmlParser:
         self._last_source = source
 
         if not body:
-            logger.warning("Тело поруке је празно; враћамо празан извештај.")
+            logger.warning("Telo poruke je prazno; vraćamo prazan izveštaj.")
             return ParsedReport.from_parts(metadata, VolumeUsage(), [], [])
 
         volume, active, old = self._parse_body(body)
@@ -344,11 +344,11 @@ BeeGFS: 92.6 TB free (73% used, changed by -4%)
     assert "ProjectAlpha" in report.active_workspaces, report.active_workspaces
     assert "OldProject1" in report.old_workspaces, report.old_workspaces
 
-    print("Самотест прошао успешно ✓")
-    print(f"  Волумен: {report.volume_name} — {report.free_space} слободно "
-          f"({report.used_percent} искоришћено, промена {report.change_percent})")
-    print(f"  Активни радни простори: {report.active_workspaces}")
-    print(f"  Стари радни простори: {report.old_workspaces}")
+    print("Samotest prošao uspešno ✓")
+    print(f"  Volumen: {report.volume_name} — {report.free_space} slobodno "
+          f"({report.used_percent} iskorišćeno, promena {report.change_percent})")
+    print(f"  Aktivni radni prostori: {report.active_workspaces}")
+    print(f"  Stari radni prostori: {report.old_workspaces}")
 
 
 if __name__ == "__main__":

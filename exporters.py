@@ -21,7 +21,7 @@ try:
     _OPENPYXL_AVAILABLE = True
 except ImportError:
     _OPENPYXL_AVAILABLE = False
-    logger.warning("openpyxl није инсталиран; Excel извоз неће бити доступан.")
+    logger.warning("openpyxl nije instaliran; Excel izvoz neće biti dostupan.")
 
 
 class ExcelExporter:
@@ -42,29 +42,29 @@ class ExcelExporter:
         """
         if not _OPENPYXL_AVAILABLE:
             raise RuntimeError(
-                "Библиотека openpyxl није инсталирана. "
-                "Покрените: pip install openpyxl"
+                "Biblioteka openpyxl nije instalirana. "
+                "Pokrenite: pip install openpyxl"
             )
 
         wb = openpyxl.Workbook()
 
         self._write_overview_sheet(wb, report)
-        self._write_workspace_sheet(wb, "Активни", report.active_workspaces)
-        self._write_workspace_sheet(wb, "Старији од 90 дана", report.old_workspaces)
+        self._write_workspace_sheet(wb, "Aktivni", report.active_workspaces)
+        self._write_workspace_sheet(wb, "Stariji od 90 dana", report.old_workspaces)
 
         # Remove the default empty sheet created by openpyxl
         if "Sheet" in wb.sheetnames:
             del wb["Sheet"]
 
         wb.save(str(path))
-        logger.info("Excel датотека сачувана: %s", path)
+        logger.info("Excel datoteka sačuvana: %s", path)
 
     # ------------------------------------------------------------------
     # Sheet builders
     # ------------------------------------------------------------------
 
     def _write_overview_sheet(self, wb: Any, report: ParsedReport) -> None:
-        ws = wb.create_sheet("Преглед")
+        ws = wb.create_sheet("Pregled")
 
         header_font = Font(bold=True, color=self._HEADER_FG)
         header_fill = PatternFill("solid", fgColor=self._HEADER_BG)
@@ -75,19 +75,15 @@ class ExcelExporter:
             cell.alignment = Alignment(horizontal="left", vertical="center")
 
         rows: List[tuple] = [
-            ("Поље", "Вредност"),
-            ("Пошиљалац", report.from_addr),
-            ("Прималац", report.to_addr),
-            ("Датум", report.date),
-            ("Наслов", report.subject),
+            ("Polje", "Vrednost"),
+            ("Naslov", report.subject),
             (),  # blank separator
-            ("Волумен", report.volume_name),
-            ("Слободан простор", report.free_space),
-            ("Искоришћено %", report.used_percent),
-            ("Промена %", report.change_percent),
+            ("Slobodan prostor", report.free_space),
+            ("Iskorišćeno %", report.used_percent),
+            ("Promena %", report.change_percent),
             (),  # blank separator
-            ("Број активних", len(report.active_workspaces)),
-            ("Број старих (> 90 дана)", len(report.old_workspaces)),
+            ("Broj aktivnih", len(report.active_workspaces)),
+            ("Broj starih (> 90 dana)", len(report.old_workspaces)),
         ]
 
         for i, row in enumerate(rows, start=1):
@@ -109,7 +105,7 @@ class ExcelExporter:
         header_font = Font(bold=True, color=self._HEADER_FG)
         header_fill = PatternFill("solid", fgColor=self._HEADER_BG)
 
-        ws.append(["#", "Радни простор"])
+        ws.append(["#", "Radni prostor"])
         ws.cell(1, 1).font = header_font
         ws.cell(1, 1).fill = header_fill
         ws.cell(1, 2).font = header_font
@@ -155,7 +151,7 @@ try:
     _REPORTLAB_AVAILABLE = True
 except ImportError:
     _REPORTLAB_AVAILABLE = False
-    logger.warning("reportlab није инсталиран; PDF извоз неће бити доступан.")
+    logger.warning("reportlab nije instaliran; PDF izvoz neće biti dostupan.")
 
 
 def _register_cyrillic_font() -> str:
@@ -204,11 +200,11 @@ def _register_cyrillic_font() -> str:
                 font_name_bold = font_name  # use regular as bold fallback
             return font_name
         except Exception as exc:
-            logger.warning("Не могу учитати DejaVuSans: %s", exc)
+            logger.warning("Ne mogu učitati DejaVuSans: %s", exc)
 
     logger.warning(
-        "DejaVuSans.ttf није пронађен; ћирилица у PDF-у можда неће бити "
-        "приказана исправно."
+        "DejaVuSans.ttf nije pronađen; ćirilica u PDF-u možda neće biti "
+        "prikazana ispravno."
     )
     return "Helvetica"
 
@@ -226,8 +222,8 @@ class PdfExporter:
         """
         if not _REPORTLAB_AVAILABLE:
             raise RuntimeError(
-                "Библиотека reportlab није инсталирана. "
-                "Покрените: pip install reportlab"
+                "Biblioteka reportlab nije instalirana. "
+                "Pokrenite: pip install reportlab"
             )
 
         font_name = _register_cyrillic_font()
@@ -276,63 +272,59 @@ class PdfExporter:
         story = []
 
         # Title
-        story.append(Paragraph("ELEMENTS Info: Извештај о статусу пројеката", title_style))
+        story.append(Paragraph("ELEMENTS Info: Izveštaj o statusu projekata", title_style))
         story.append(Spacer(1, 0.4 * cm))
 
         # Metadata table
-        story.append(Paragraph("Метаподаци поруке", h2_style))
+        story.append(Paragraph("Metapodaci poruke", h2_style))
         meta_data = [
-            ["Пошиљалац", report.from_addr or "—"],
-            ["Прималац", report.to_addr or "—"],
-            ["Датум", report.date or "—"],
-            ["Наслов", report.subject or "—"],
+            ["Naslov", report.subject or "—"],
         ]
         story.append(self._make_table(meta_data, font_name, font_bold, col_widths=[4 * cm, 13 * cm]))
 
         story.append(Spacer(1, 0.4 * cm))
 
         # Storage table
-        story.append(Paragraph("Коришћење складишта", h2_style))
+        story.append(Paragraph("Korišćenje skladišta", h2_style))
         storage_data = [
-            ["Волумен", report.volume_name or "—"],
-            ["Слободан простор", report.free_space or "—"],
-            ["Искоришћено", report.used_percent or "—"],
-            ["Промена", report.change_percent or "—"],
+            ["Slobodan prostor", report.free_space or "—"],
+            ["Iskorišćeno", report.used_percent or "—"],
+            ["Promena", report.change_percent or "—"],
         ]
         story.append(self._make_table(storage_data, font_name, font_bold, col_widths=[4 * cm, 13 * cm]))
 
         story.append(Spacer(1, 0.4 * cm))
 
         # Summary counters
-        story.append(Paragraph("Сажетак", h2_style))
+        story.append(Paragraph("Sažetak", h2_style))
         summary_data = [
-            ["Број активних радних простора", str(len(report.active_workspaces))],
-            ["Број старих радних простора (> 90 дана)", str(len(report.old_workspaces))],
+            ["Broj aktivnih radnih prostora", str(len(report.active_workspaces))],
+            ["Broj starih radnih prostora (> 90 dana)", str(len(report.old_workspaces))],
         ]
         story.append(self._make_table(summary_data, font_name, font_bold, col_widths=[10 * cm, 7 * cm]))
 
         story.append(Spacer(1, 0.6 * cm))
 
         # Active workspaces
-        story.append(Paragraph("Активни радни простори", h2_style))
+        story.append(Paragraph("Aktivni radni prostori", h2_style))
         if report.active_workspaces:
             for ws_name in report.active_workspaces:
                 story.append(Paragraph(f"• {ws_name}", item_style))
         else:
-            story.append(Paragraph("(нема активних радних простора)", body_style))
+            story.append(Paragraph("(nema aktivnih radnih prostora)", body_style))
 
         story.append(Spacer(1, 0.6 * cm))
 
         # Old workspaces
-        story.append(Paragraph("Радни простори старији од 90 дана", h2_style))
+        story.append(Paragraph("Radni prostori stariji od 90 dana", h2_style))
         if report.old_workspaces:
             for ws_name in report.old_workspaces:
                 story.append(Paragraph(f"• {ws_name}", item_style))
         else:
-            story.append(Paragraph("(нема старих радних простора)", body_style))
+            story.append(Paragraph("(nema starih radnih prostora)", body_style))
 
         doc.build(story)
-        logger.info("PDF датотека сачувана: %s", path)
+        logger.info("PDF datoteka sačuvana: %s", path)
 
     @staticmethod
     def _make_table(
